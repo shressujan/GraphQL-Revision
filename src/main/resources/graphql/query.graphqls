@@ -4,3 +4,8 @@ type Query {
     bankAccounts: [BankAccount]!
     bankAccountByName(name:String): [BankAccount]!
 }
+
+
+type Mutation {
+    createBankAccount(name: String!, currency: Currency!): BankAccount!
+}

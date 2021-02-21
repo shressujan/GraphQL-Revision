@@ -1,5 +1,6 @@
 package microservice.demo.resolver;
 
+import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import lombok.extern.slf4j.Slf4j;
 import microservice.demo.domain.BankAccount;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 @Slf4j
 @Component
-public class BankAccountResolver implements GraphQLQueryResolver {
+public class BankAccountResolver implements GraphQLQueryResolver, GraphQLMutationResolver {
 
     private List<BankAccount> accounts = new ArrayList<>();
     private BankAccountRepository repo;
@@ -50,5 +51,13 @@ public class BankAccountResolver implements GraphQLQueryResolver {
         List<BankAccount> accounts = new ArrayList<>();
         acc.stream().filter(a -> a.getName().equals(name)).forEach(accounts :: add);
         return accounts;
+    }
+
+    public BankAccount createBankAccount(String name, Currency currency) {
+        log.info("Saving Bank account name:{}", name);
+        BankAccount account = BankAccount.builder().id(UUID.randomUUID()).name(name).currency(currency).build();
+        repo.save(account);
+
+        return account;
     }
 }
